@@ -34,10 +34,10 @@ GET http://localhost:8080/auctions/users/{userId}
 
 ### Opdracht 1: Unit testing
 
-- implement the unit tests
-- to test the service layer you have to use Mockito 
-(Pluralsight course on Mockito: https://app.pluralsight.com/library/courses/tdd-junit5/table-of-contents)
-- the persistence layer is tested with an in-memory h2 database
+Implementeer de gevraagde unit testen. Om de service laag te testen moet je gebruikmaken van Mockito.
+De persistence laag wordt getest met een h2 in-memory database.
+
+Pluralsight cursus over Mockito: https://app.pluralsight.com/library/courses/tdd-junit5/table-of-contents
 
 ### Opdracht 2: Extra entity klassen
 
