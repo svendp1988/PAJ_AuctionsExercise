@@ -40,7 +40,7 @@ public class UserServiceGetUserByIdTest {
 	}
 
 	@Test
-	public void returnsNullWhenNoUserWithGivenIdFound() {
+	public void throwsUserNotFoundExceptionWhenNoUserWithGivenIdFound() {
 		when(userDao.findUserById(USER_ID)).thenReturn(Optional.empty());
 
 		assertThrows(UserNotFoundException.class, () -> userService.getUserById(USER_ID));

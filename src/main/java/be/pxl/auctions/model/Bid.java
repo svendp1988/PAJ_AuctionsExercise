@@ -1,12 +1,20 @@
 package be.pxl.auctions.model;
 
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Objects;
 
-public class Bid {
+@Entity
+@Table(name = "bids")
+public class Bid implements Comparable<Bid> {
+    @Id
+    @GeneratedValue
     private long id;
     private double amount;
     private LocalDate date;
+    @ManyToOne
     private Auction auction;
+    @OneToOne
     private User user;
 
     public Bid() {
@@ -48,5 +56,14 @@ public class Bid {
 
     public void setAuction(Auction auction) {
         this.auction = auction;
+    }
+
+    @Override
+    public int compareTo(Bid o) {
+        return Double.compare(o.amount, this.amount);
+    }
+
+    public User getUser() {
+        return user;
     }
 }

@@ -63,7 +63,7 @@ public class UserService {
 		return mapToUserResource(userDao.saveUser(user));
 	}
 
-	private UserDTO mapToUserResource(User user) {
+	public UserDTO mapToUserResource(User user) {
 		UserDTO userDTO = new UserDTO();
 		userDTO.setId(user.getId());
 		userDTO.setFirstName(user.getFirstName());

@@ -10,6 +10,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 
 @Entity
 @Table(name = "users")
@@ -69,5 +70,18 @@ public class User {
 
 	public int getAge() {
 		return (int) ChronoUnit.YEARS.between(dateOfBirth, LocalDate.now());
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		User user = (User) o;
+		return Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(email, user.email) && Objects.equals(dateOfBirth, user.dateOfBirth);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(firstName, lastName, email, dateOfBirth);
 	}
 }
