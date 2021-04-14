@@ -44,8 +44,10 @@ public class AuctionService {
         auctionDTO.setEndDate(auction.getEndDate());
         auctionDTO.setBids(auction.getBids().stream().map(this::mapToBidResource).collect(Collectors.toList()));
         auctionDTO.setNumberOfBids(auction.getBids().size());
-        auctionDTO.setHighestBid(mapToBidResource(auction.findHighestBid()));
-        auctionDTO.setHigestBidBy(userService.mapToUserResource(auctionDTO.getHighestBid().getUser()));
+        if (auctionDTO.getNumberOfBids() > 0) {
+            auctionDTO.setHighestBid(mapToBidResource(auction.findHighestBid()));
+            auctionDTO.setHigestBidBy(userService.mapToUserResource(auctionDTO.getHighestBid().getUser()));
+        }
         return auctionDTO;
     }
 
@@ -91,11 +93,11 @@ public class AuctionService {
     public AuctionDTO registerBid(long auctionId, BidCreateResource bidCreateResource) {
         Auction auction = auctionDao.findAuctionById(auctionId).orElseThrow(() -> new AuctionNotFoundException("Unable to find Auction with id [" + auctionId + "]"));
         User user = userDao.findUserByEmail(bidCreateResource.getUserEmail()).orElseThrow(() -> new UserNotFoundException("Unable to find User with email [" + bidCreateResource.getUserEmail() + "]"));
-        Bid higestBid = auction.findHighestBid();
-        if (bidCreateResource.getAmount() < higestBid.getAmount()) {
+        Bid highestBid = auction.findHighestBid();
+        if (null != highestBid && bidCreateResource.getAmount() < highestBid.getAmount()) {
             throw new InvalidBidException("Bid cannot be lower than highest bid.");
         }
-        if (bidCreateResource.getAmount() == higestBid.getAmount() && user.equals(higestBid.getUser())) {
+        if (null != highestBid && bidCreateResource.getAmount() == highestBid.getAmount() && user.equals(highestBid.getUser())) {
             throw new InvalidBidException("User [" + user.getEmail() + "] already has the highest bid.");
         }
         if (auction.isFinished()) {

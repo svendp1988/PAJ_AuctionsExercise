@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("auctions")
+@RequestMapping("/rest/auctions")
 public class AuctionRest {
     private static final Logger LOGGER = LogManager.getLogger(AuctionRest.class);
 
@@ -30,9 +30,9 @@ public class AuctionRest {
         return auctionService.createAuction(auctionCreateResource);
     }
 
-    @PutMapping("{auctionId}")
-    public AuctionDTO registerBid(@PathVariable("auctionId") long auctionId, @RequestBody BidCreateResource bidCreateResource) {
-        return auctionService.registerBid(auctionId, bidCreateResource);
+    @PostMapping("{auctionId}/bids")
+    public AuctionDTO registerBid(@PathVariable("auctionId") long auctionId, @RequestBody BidCreateResource bid) {
+        return auctionService.registerBid(auctionId, bid);
     }
 
 }
