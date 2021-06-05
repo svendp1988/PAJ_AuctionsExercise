@@ -66,7 +66,7 @@ public class AuctionService {
         if (auction.isFinished()) {
             throw new InvalidDateException("EndDate cannot be in the past.");
         }
-        return mapToAuctionResource(auctionDao.saveAction(auction));
+        return mapToAuctionResource(auctionDao.saveAuction(auction));
     }
 
     private Auction mapToAuction(AuctionCreateResource auctionInfo) {
@@ -94,17 +94,18 @@ public class AuctionService {
         Auction auction = auctionDao.findAuctionById(auctionId).orElseThrow(() -> new AuctionNotFoundException("Unable to find Auction with id [" + auctionId + "]"));
         User user = userDao.findUserByEmail(bidCreateResource.getUserEmail()).orElseThrow(() -> new UserNotFoundException("Unable to find User with email [" + bidCreateResource.getUserEmail() + "]"));
         Bid highestBid = auction.findHighestBid();
-        if (null != highestBid && bidCreateResource.getAmount() < highestBid.getAmount()) {
-            throw new InvalidBidException("Bid cannot be lower than highest bid.");
-        }
         if (null != highestBid && bidCreateResource.getAmount() == highestBid.getAmount() && user.equals(highestBid.getUser())) {
             throw new InvalidBidException("User [" + user.getEmail() + "] already has the highest bid.");
+        }
+        if (null != highestBid && bidCreateResource.getAmount() <= highestBid.getAmount()) {
+            throw new InvalidBidException("Bid cannot be lower than highest bid.");
         }
         if (auction.isFinished()) {
             throw new InvalidBidException("Cannot make a bid on this auction as it is already closed.");
         }
         Bid bid = new Bid(user, LocalDate.now(), bidCreateResource.getAmount());
         auction.addBid(bid);
+        auctionDao.saveAuction(auction);
         return mapToAuctionResource(auction);
     }
 }

@@ -21,7 +21,7 @@ public class AuctionDaoImpl implements AuctionDao {
     private EntityManager entityManager;
 
     @Transactional
-    public Auction saveAction(Auction auction) {
+    public Auction saveAuction(Auction auction) {
         LOGGER.info("Saving auction [" + auction.getDescription() + "]");
         entityManager.persist(auction);
         return auction;
